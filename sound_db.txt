@@ -1,0 +1,17 @@
+link	f0 min (Hz)	f0 max (Hz)	label
+https://www.youtube.com/watch?v=DXf4ocadnnE	80	80	hornet
+https://www.youtube.com/watch?v=6xPLkxXOm1A	160	160	wasp
+https://www.youtube.com/watch?v=6xPLkxXOm1A	120	120	hornet
+https://www.youtube.com/watch?v=jAO2oAEr6Ro	90	120	hornet
+https://www.youtube.com/watch?v=ChQmjtNVULE	130	130	hornet
+https://www.youtube.com/watch?v=tw_8_o9V-fU	160	160	hornet
+https://www.youtube.com/watch?v=oqXnEYekGLg	130	130	hornet
+https://www.youtube.com/watch?v=WW2pslED0v8	80	100	hornet
+https://www.youtube.com/watch?v=WW2pslED0v8	240	260	bee
+https://www.youtube.com/watch?v=uCTVawrGCLI	90	110	hornet
+https://www.youtube.com/watch?v=uCTVawrGCLI	260	290	bee
+https://www.youtube.com/watch?v=vx2EA_ooCf0	100	100	hornet
+https://www.youtube.com/watch?v=-d_pQ3DyzHg	160	160	bee
+https://www.youtube.com/watch?v=YgOYLDf5Wv8	200	230	bee
+https://www.youtube.com/watch?v=Z5tLGn-QNpg	180	200	bee
+https://www.youtube.com/watch?v=230xNL_NVOM	200	210	bee
