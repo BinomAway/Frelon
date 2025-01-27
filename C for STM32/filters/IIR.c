@@ -1,39 +1,29 @@
 // IIR Filter ////////////////////////////////////////////////////////////////////////////////////////
 
 
+// see .h for coeff definition and different shape of filters
+
 #include "FIR_IIR.h"
 
-// COEFFS for lowpass chebyshev1 order 1 with ripple centered at 200 hz for 48000 Hz sampling freq
-/*
-#define NBQ 1
-#define XYV_size 5
-float biquada[]={0.9818003581319115,-1.9812314341247965};
-float biquadb[]={1,2};
-float gain=9653.233352591471;
-float xyv[]={0,0,0,0,0,0};
-*/
 
 
-// COEFFS for bandpass chebyshev1 order 2 centered at 150 hz, width=50 for 48000 Hz sampling freq
+// coeffs for a chebychev1 lowpass order4  ripple 0.3, center 120 hz @ 48kHz
 /*
 #define NBQ 2
-#define XYV_size 8
-float biquada[]={0.9958836743042496,-1.9955905020110396,0.9947513494300885,-1.9942744077599701};
-float biquadb[]={1,-2,1,2};
-float gain=73077.33128000403;
-float xyv[]={0,0,0,0,0,0,0,0,0};
+#define XYV_size 14
+REAL biquada[]={0.9939363481059377,-1.9936762185610304,0.9854229553653764,-1.9853265743477273};
+REAL biquadb[]={1,2,1,2};
+REAL gain=638841315.2583077;
+REAL xyv[]={0,0,0,0,0,0,0,0,0};
 */
 
-
-// COEFFS for bandpass chebyshev1 order 4 centered at 100 hz, width=40 for 48000 Hz sampling freq
-
+// coeffs for a chebychev1 bandpass order4 center 120 hz and width 40 @ 48kHz
 #define NBQ 4
 #define XYV_size 14
 float biquada[]={0.9983439863360103,-1.9982320133163622,0.9954728260697103,-1.9953332927617788,0.9946772958747032,-1.9944843359249267,0.9975702713489363,-1.997329123530468};
 float biquadb[]={1,-2,1,-2,1,2,1,2};
 float gain=19470457182.946293;
 float xyv[]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
 
 float IIR_filter(float v)
 {
