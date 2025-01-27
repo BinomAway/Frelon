@@ -1,0 +1,146 @@
+desc:FIR cyclic buffer
+
+// author : Gwendal BOURDET
+
+slider1:1000<0,20000,1>f
+slider2:4<0,9,1>buffer_size 2^n
+slider3:1.01<1.01,2,0.01>width
+slider4:0<0,1,1{lowpass,bandpass}>mode
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+
+N=16; //size of buffers
+a=1000;  //address for coefficients a
+a[0]=0;
+a[1]=0;
+a[2]=0;
+a[3]=0;
+a[4]=0;
+a[5]=0;
+a[6]=0;
+a[7]=0;
+a[8]=0;
+a[9]=0;
+a[10]=0;
+a[11]=0;
+a[12]=0;
+a[13]=0;
+a[14]=0;
+a[15]=0;
+xl=2000; //address for inputs X left
+xr=3000; //address for inputs X right
+j=0;
+/*
+a[0] = 0.5;
+a[1] = -0.1;
+a[2] = +0.3;
+a[3] = -0.5;
+*/
+
+@slider
+
+f=slider1;
+N=2^slider2;
+w=slider3;
+mode=slider4;
+
+fL=(f/w)/srate;
+kL=fL*2*$pi;
+fH=(f*w)/srate;
+kH=fH*2*$pi;
+i=0;
+s=0;
+loop(N, 
+
+  tL=(i-N/2)*kL;
+  tH=(i-N/2)*kH;
+  (tL==0) ? (
+    yL = 1;
+  ):(
+    yL = sin(tL)/tL;
+  );
+  
+  (tH==0) ? (
+    yH = 1;
+  ):(
+    yH = sin(tH)/tH;
+  );
+
+  (mode == 0) ? (
+     y=fH*yH;
+  ):(
+     y=(fH*yH - fL*yL)/2;
+  );
+  
+  s += y*y;
+  a[i] = y;
+  i+=1;
+);
+
+//normalization
+
+s=sqrt(s);
+i=0;
+loop(N, 
+
+  a[i] = a[i]/s;
+  i+=1;
+);
+
+
+@sample
+
+/*
+xl[(N-0+j)%N] = spl0; //dont use modulo
+xr[(N-0+j)%N] = spl1;
+
+sl=0;
+sr=0;
+i=0;
+loop(N, 
+
+  sl += a[i] * xl[(N-i+j)%N];
+  sr += a[i] * xr[(N-i+j)%N];
+  i+=1;
+);
+
+spl0 = sl; 
+spl1 = sr;
+j+=1;
+(j >= N) ? j=0;
+*/
+
+//-------------------
+
+xl[k]= spl0;
+xr[k]= spl1;
+
+sl=0;
+sr=0;
+i=N-1;
+loop(N-k, 
+
+  sl += a[i-k] * xl[i];
+  sr += a[i-k] * xr[i];
+  i-=1;
+);
+i=0;
+loop(k, 
+
+  sl += a[N+i-k] * xl[i];
+  sr += a[N+i-k] * xr[i];
+  i+=1;
+);
+
+spl0 = sl; 
+spl1 = sr;
+
+k-=1;
+(k<0) ? k+=N;
+
+

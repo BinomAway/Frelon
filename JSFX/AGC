@@ -1,0 +1,59 @@
+desc:automatic gain control
+
+//tags: agc
+//author: Gwendal BOURDET
+
+// problems :
+// gain is limited so there is still a noise floor that is too low
+// alpha being too big >0.1  means the action is too fast and distortion appears
+// alpha being too low <0.01 means the action is slower and big transients appear when volume goes up again
+// using such algorithm reduces dynamics and diminishes SNR
+
+slider1:0.001<0.001,0.5,0.001>alpha
+slider2:0.25<0,0.5,0.01>target
+slider3:0.1<0,1,0.1>gain coefficient
+slider4:1<0.1,10,0.01>applied gain
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+ext_tail_size=-1;
+
+agc_maxgain = 10;
+agc_gain = 1;
+agc_target = 0.1;
+agc_alpha = 0.1;
+
+buffer;
+buffer_i = 0;
+
+
+@slider
+agc_alpha = slider1;
+agc_target = slider2;
+gain_coeff = slider3;
+
+@sample
+
+
+// gain 
+spl0 = agc_gain * spl0;
+spl1 = agc_gain * spl1;
+
+
+// update
+error = agc_target - abs((spl0+spl1)/2);
+agc_gain = agc_gain + agc_alpha*error;
+agc_gain < 1/agc_maxgain ? 1/agc_maxgain;
+agc_gain > agc_maxgain ? agc_gain = agc_maxgain;
+slider4 = agc_gain*gain_coeff;
+
+// }
+
+spl0 >  1 ? spl0 =  1.01 ; // security clipping for transients
+spl0 < -1 ? spl0 = -1.01 ; // security clipping for transients
+spl1 >  1 ? spl1 =  1.01 ; // security clipping for transients
+spl1 < -1 ? spl1 = -1.01 ; // security clipping for transients

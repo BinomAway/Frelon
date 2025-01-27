@@ -1,0 +1,98 @@
+
+
+desc:IIR direct1
+desc:IIR direct1 (gwendal bourdet)
+//tags: filter
+//author: gwendal bourdet
+
+// just write the desired coefficients
+// mind that b0 multiplies x0 that is the current value (x2 is the oldest)
+// mind that the coeffs a should already bear a minus sign (maybe you should negate your coeffs)
+
+
+slider1:1<0,0,0.01>b0
+slider2:0<0,0,0.01>b1
+slider3:0<0,0,0.01>b2
+slider4:1<0,0,0.01>a0 = 1
+slider5:0<0,0,0.01>a1
+slider6:0<0,0,0.01>a2
+slider7:1<0,0,0.01>pregain (attenuates input)
+slider8:0<0,1,1{filter stability is not guaranted}> WARNING : 
+
+
+//slider15:0<-1,1,0.01>qc //qc = 1
+
+
+in_pin:left input
+in_pin:right input
+out_pin:left output
+out_pin:right output
+
+@init
+
+
+// buffers
+Xr=1000;
+Xl=1003;
+Yr=1006;
+Yl=1009;
+Xr[0] = 0;
+Xr[1] = 0;
+Xr[2] = 0;
+Xl[0] = 0;
+Xl[1] = 0;
+Xl[2] = 0;
+Yr[0] = 0;
+Yr[1] = 0;
+Yr[2] = 0;
+Yl[0] = 0;
+Yl[1] = 0;
+Yl[2] = 0;
+
+@slider
+b0 = slider1;
+b1 = slider2;
+b2 = slider3;
+
+a1 = slider5;
+a2 = slider6;
+
+pregain = slider7;
+
+
+
+@sample
+Xl[2] = Xl[1];
+Xl[1] = Xl[0];
+Xl[0] = spl0/pregain;
+
+Xr[2] = Xr[1];
+Xr[1] = Xr[0];
+Xr[0] = spl1/pregain;
+
+Yl[2] = Yl[1];
+Yl[1] = Yl[0];
+Yl[0] = a1*Yl[1] // minus sign in the coeff for a
+      + a2*Yl[2]
+      + b0*Xl[0]
+      + b1*Xl[1]
+      + b2*Xl[2];
+
+Yr[2] = Yr[1];
+Yr[1] = Yr[0];
+Yr[0] = a1*Yr[1] // minus sign in the coeff for a
+      + a2*Yr[2]
+      + b0*Xr[0]
+      + b1*Xr[1]
+      + b2*Xr[2];
+
+//Yl[0] = max(min(Yl[0], 1.01),-1.01);
+//Yr[0] = max(min(Yr[0], 1.01),-1.01); // limiting, Y should not clip
+
+abs(Yl[0]) > 1.0 ? (Yl[0] = 0);
+abs(Yr[0]) > 1.0 ? (Yr[0] = 0);
+
+spl0 = Yl[0];
+spl1 = Yr[0];
+
+
