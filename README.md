@@ -14,3 +14,5 @@ JSFX scripts are meant to be used within Reaper
 - IIR is an Infinite Impulse Response filter of order 2. Write your designed coefficients to check how they act
 
 Test_filtre is a folder containing scripts used for designing filters, as well a library called kissFFT and test wav files
+
+sound_DB.txt is a file containing pitch measurements for bees and hornets across various youtube videos
